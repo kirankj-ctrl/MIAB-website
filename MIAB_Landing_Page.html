@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiAB — Marketing in A Box</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+/* ── Brand tokens ── */
+:root {
+  --lime:   #AFE607;
+  --teal:   #00A878;
+  --amber:  #FFD166;
+  --white:  #FFFFFF;
+  --ink:    #0A0F0D;
+  --ink2:   #1C2620;
+  --ink3:   #2E3C35;
+  --muted:  #7A8C82;
+  --surface:#F2F7F4;
+  --border: rgba(10,15,13,0.1);
+
+  --font-primary: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --r: 12px;
+  --r2: 20px;
+  --r3: 32px;
+}
+
+body {
+  font-family: var(--font-primary);
+  background: var(--ink);
+  color: var(--white);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ── Noise texture overlay ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+/* ── Nav ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 40px;
+  background: rgba(10,15,13,0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(175,230,7,0.12);
+}
+.nav-logo {
+  display: flex; align-items: center;
+  text-decoration: none;
+}
+.nav-badge {
+  font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--lime);
+  background: rgba(175,230,7,0.1);
+  border: 1px solid rgba(175,230,7,0.2);
+  padding: 4px 12px; border-radius: 20px;
+}
+.nav-cta {
+  background: var(--lime); color: var(--ink);
+  font-weight: 700; font-size: 13px;
+  padding: 9px 20px; border-radius: 8px;
+  border: none; cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.15s, background 0.15s;
+}
+.nav-cta:hover { background: #c5f520; transform: translateY(-1px); }
+
+/* ── Hero ── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 120px 40px 80px;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Radial gradient blobs */
+.hero::after {
+  content: '';
+  position: absolute;
+  width: 900px; height: 900px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,168,120,0.18) 0%, transparent 70%);
+  top: -200px; left: 50%; transform: translateX(-50%);
+  pointer-events: none;
+}
+.hero-blob-2 {
+  position: absolute;
+  width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(175,230,7,0.12) 0%, transparent 70%);
+  bottom: -100px; right: -100px;
+  pointer-events: none;
+}
+.hero-blob-3 {
+  position: absolute;
+  width: 400px; height: 400px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,209,102,0.1) 0%, transparent 70%);
+  bottom: 0; left: -80px;
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(175,230,7,0.08);
+  border: 1px solid rgba(175,230,7,0.2);
+  padding: 6px 16px; border-radius: 20px;
+  font-size: 12px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--lime);
+  margin-bottom: 32px;
+  position: relative; z-index: 1;
+  animation: fadeUp 0.8s ease both;
+}
+.eyebrow-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--lime);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+.hero-title {
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -3px;
+  color: var(--white);
+  max-width: 880px;
+  position: relative; z-index: 1;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+.hero-title .accent {
+  color: var(--lime);
+  display: inline-block;
+  position: relative;
+}
+.hero-title .accent-teal { color: var(--teal); }
+.hero-title .accent-amber { color: var(--amber); }
+
+.hero-sub {
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 400; color: rgba(255,255,255,0.55);
+  max-width: 560px; line-height: 1.7;
+  margin-top: 24px;
+  position: relative; z-index: 1;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+
+/* ── Waitlist form ── */
+.waitlist-block {
+  position: relative; z-index: 1;
+  margin-top: 48px;
+  animation: fadeUp 0.8s 0.3s ease both;
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+}
+.waitlist-form {
+  display: flex; gap: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px; padding: 6px;
+  width: 100%; max-width: 480px;
+}
+.waitlist-input {
+  flex: 1;
+  background: transparent; border: none; outline: none;
+  padding: 12px 16px;
+  font-family: var(--font-primary);
+  font-size: 15px; color: var(--white);
+}
+.waitlist-input::placeholder { color: rgba(255,255,255,0.3); }
+.waitlist-btn {
+  background: var(--lime); color: var(--ink);
+  border: none; cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 14px; font-weight: 700;
+  padding: 12px 24px; border-radius: 10px;
+  white-space: nowrap;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 8px;
+}
+.waitlist-btn:hover { background: #c5f520; transform: scale(1.02); }
+.waitlist-btn svg { width: 16px; height: 16px; }
+
+.report-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13px; color: rgba(255,255,255,0.5);
+}
+.report-badge strong { color: var(--amber); font-weight: 600; }
+.report-badge svg { width: 14px; height: 14px; opacity: 0.6; }
+
+/* ── Social proof strip ── */
+.social-proof {
+  position: relative; z-index: 1;
+  margin-top: 64px;
+  display: flex; align-items: center; gap: 32px;
+  flex-wrap: wrap; justify-content: center;
+  animation: fadeUp 0.8s 0.4s ease both;
+}
+.proof-avatars {
+  display: flex;
+}
+.proof-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 2px solid var(--ink);
+  margin-left: -8px; first-of-type { margin-left: 0; }
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: var(--ink);
+}
+.proof-text {
+  font-size: 13px; color: rgba(255,255,255,0.4);
+}
+.proof-text strong { color: rgba(255,255,255,0.7); }
+.proof-divider {
+  width: 1px; height: 24px;
+  background: rgba(255,255,255,0.1);
+}
+
+/* ── Dashboard mockup preview ── */
+.preview-section {
+  position: relative; z-index: 1;
+  padding: 0 40px 80px;
+  display: flex; justify-content: center;
+  animation: fadeUp 0.8s 0.5s ease both;
+}
+.preview-frame {
+  width: 100%; max-width: 1000px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(175,230,7,0.05);
+}
+.frame-bar {
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 12px 18px;
+  display: flex; align-items: center; gap: 8px;
+}
+.frame-dot { width: 10px; height: 10px; border-radius: 50%; }
+.frame-url {
+  flex: 1; text-align: center;
+  background: rgba(255,255,255,0.05);
+  border-radius: 6px; padding: 4px 12px;
+  font-size: 11px; color: rgba(255,255,255,0.3);
+  font-family: monospace;
+  max-width: 260px; margin: 0 auto;
+}
+.frame-content {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 16px;
+  min-height: 360px;
+}
+/* Sidebar */
+.mock-sidebar {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.mock-logo-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px; margin-bottom: 10px;
+}
+.mock-logo-box {
+  width: 24px; height: 24px; border-radius: 6px;
+  background: var(--lime);
+  flex-shrink: 0;
+}
+.mock-logo-text {
+  width: 60px; height: 10px; border-radius: 3px;
+  background: rgba(255,255,255,0.15);
+}
+.mock-nav-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px; border-radius: 7px;
+}
+.mock-nav-item.active { background: rgba(175,230,7,0.12); }
+.mock-nav-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,0.15); flex-shrink: 0;
+}
+.mock-nav-item.active .mock-nav-dot { background: var(--lime); }
+.mock-nav-line {
+  flex: 1; height: 8px; border-radius: 3px;
+  background: rgba(255,255,255,0.1);
+}
+.mock-nav-item.active .mock-nav-line { background: rgba(175,230,7,0.4); }
+.mock-badge {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: rgba(255,107,107,0.6);
+  font-size: 8px; color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; flex-shrink: 0;
+}
+/* Main area */
+.mock-main {
+  display: flex; flex-direction: column; gap: 14px;
+}
+.mock-topbar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 10px;
+}
+.mock-tb-title {
+  height: 12px; width: 120px; border-radius: 3px;
+  background: rgba(255,255,255,0.15);
+}
+.spacer { flex: 1; }
+.mock-btn-sm {
+  height: 26px; width: 80px; border-radius: 6px;
+  background: var(--lime); opacity: 0.7;
+}
+.mock-kpi-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+}
+.mock-kpi {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px; padding: 12px;
+}
+.mock-kpi-label {
+  height: 7px; width: 50px; border-radius: 2px;
+  background: rgba(255,255,255,0.12); margin-bottom: 8px;
+}
+.mock-kpi-val {
+  height: 18px; width: 60px; border-radius: 3px;
+  background: rgba(255,255,255,0.2);
+}
+.mock-kpi.green .mock-kpi-val { background: rgba(175,230,7,0.35); }
+.mock-kpi.teal .mock-kpi-val  { background: rgba(0,168,120,0.35); }
+.mock-kpi.amber .mock-kpi-val { background: rgba(255,209,102,0.35); }
+.mock-content-row {
+  display: grid; grid-template-columns: 1fr 160px; gap: 10px;
+}
+.mock-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 10px; padding: 14px;
+}
+.mock-card-title {
+  height: 9px; width: 80px; border-radius: 2px;
+  background: rgba(255,255,255,0.15); margin-bottom: 12px;
+}
+.mock-post-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.mock-platform-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.mock-post-line {
+  flex: 1; height: 8px; border-radius: 2px;
+  background: rgba(255,255,255,0.1);
+}
+.mock-status-pill {
+  height: 16px; width: 50px; border-radius: 8px;
+}
+
+/* ── Problem section ── */
+.section { padding: 100px 40px; position: relative; }
+.section-inner { max-width: 1100px; margin: 0 auto; }
+
+.section-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--teal);
+  margin-bottom: 20px;
+}
+.section-title {
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 800; line-height: 1.1;
+  letter-spacing: -1.5px; color: var(--white);
+  margin-bottom: 20px;
+}
+.section-sub {
+  font-size: 17px; color: rgba(255,255,255,0.5);
+  line-height: 1.7; max-width: 560px;
+}
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px; margin-top: 56px;
+}
+.problem-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: var(--r2);
+  padding: 28px;
+  transition: border-color 0.2s, transform 0.2s;
+  position: relative; overflow: hidden;
+}
+.problem-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--lime);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.problem-card:hover { border-color: rgba(175,230,7,0.2); transform: translateY(-2px); }
+.problem-card:hover::before { opacity: 1; }
+.problem-num {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px;
+  color: rgba(255,255,255,0.2); margin-bottom: 12px;
+}
+.problem-card-title {
+  font-size: 18px; font-weight: 700; color: var(--white);
+  margin-bottom: 10px; line-height: 1.3;
+}
+.problem-card-body {
+  font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.7;
+}
+
+/* ── Solution section ── */
+.solution-section {
+  background: rgba(175,230,7,0.04);
+  border-top: 1px solid rgba(175,230,7,0.08);
+  border-bottom: 1px solid rgba(175,230,7,0.08);
+}
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px; margin-top: 56px;
+}
+.module-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--r2); padding: 24px;
+  transition: all 0.2s;
+}
+.module-card:hover {
+  background: rgba(255,255,255,0.06);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+}
+.module-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.module-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: rgba(255,255,255,0.3);
+  margin-bottom: 6px;
+}
+.module-title {
+  font-size: 16px; font-weight: 700; color: var(--white);
+  margin-bottom: 8px; line-height: 1.3;
+}
+.module-desc {
+  font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.6;
+}
+
+/* ── Free report section ── */
+.report-section {
+  padding: 100px 40px;
+}
+.report-card {
+  max-width: 900px; margin: 0 auto;
+  background: linear-gradient(135deg, rgba(0,168,120,0.12) 0%, rgba(175,230,7,0.08) 100%);
+  border: 1px solid rgba(0,168,120,0.2);
+  border-radius: 28px;
+  padding: 60px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 60px; align-items: center;
+  position: relative; overflow: hidden;
+}
+.report-card::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(175,230,7,0.15) 0%, transparent 70%);
+}
+.report-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--teal);
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 16px;
+}
+.report-eyebrow span {
+  background: rgba(0,168,120,0.2); border-radius: 4px;
+  padding: 2px 8px;
+}
+.report-title {
+  font-size: clamp(28px, 3.5vw, 40px);
+  font-weight: 800; line-height: 1.15;
+  letter-spacing: -1px; color: var(--white);
+  margin-bottom: 16px;
+}
+.report-title em {
+  font-style: normal; color: var(--lime);
+}
+.report-body {
+  font-size: 15px; color: rgba(255,255,255,0.55);
+  line-height: 1.7; margin-bottom: 28px;
+}
+.report-items {
+  display: flex; flex-direction: column; gap: 10px;
+  margin-bottom: 32px;
+}
+.report-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  font-size: 14px; color: rgba(255,255,255,0.7);
+}
+.report-item-check {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: rgba(175,230,7,0.15);
+  border: 1px solid rgba(175,230,7,0.3);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+  font-size: 10px; color: var(--lime);
+}
+.report-form {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.report-input {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px; padding: 14px 16px;
+  font-family: var(--font-primary);
+  font-size: 14px; color: var(--white);
+  width: 100%; outline: none;
+  transition: border-color 0.2s;
+}
+.report-input::placeholder { color: rgba(255,255,255,0.3); }
+.report-input:focus { border-color: rgba(175,230,7,0.4); }
+.report-submit {
+  background: var(--lime); color: var(--ink);
+  border: none; border-radius: 10px; cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 15px; font-weight: 700;
+  padding: 15px; width: 100%;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.report-submit:hover { background: #c5f520; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(175,230,7,0.3); }
+.report-note {
+  font-size: 12px; color: rgba(255,255,255,0.3); text-align: center;
+}
+
+/* ── Report preview mockup ── */
+.report-preview {
+  position: relative; z-index: 1;
+}
+.report-doc {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px; padding: 24px;
+  position: relative;
+}
+.report-doc-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+}
+.report-doc-logo {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--lime);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; color: var(--ink);
+}
+.report-doc-title {
+  font-size: 14px; font-weight: 700; color: var(--white);
+}
+.report-doc-sub {
+  font-size: 11px; color: rgba(255,255,255,0.4);
+}
+.report-metric {
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px; padding: 12px 14px;
+  margin-bottom: 10px;
+}
+.report-metric-label {
+  font-size: 10px; color: rgba(255,255,255,0.4);
+  margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;
+}
+.report-metric-bar {
+  height: 6px; border-radius: 3px;
+  background: rgba(255,255,255,0.08); overflow: hidden;
+}
+.report-metric-fill {
+  height: 100%; border-radius: 3px; transition: width 1s ease;
+}
+.report-score {
+  font-size: 22px; font-weight: 800;
+  display: flex; align-items: baseline; gap: 4px;
+  margin-top: 8px;
+}
+.report-score span { font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.4); }
+.report-tag-row {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px;
+}
+.report-tag {
+  font-size: 11px; padding: 3px 10px; border-radius: 20px;
+  font-weight: 600;
+}
+.tag-lime { background: rgba(175,230,7,0.15); color: var(--lime); }
+.tag-amber { background: rgba(255,209,102,0.15); color: var(--amber); }
+.tag-teal { background: rgba(0,168,120,0.15); color: var(--teal); }
+.tag-red { background: rgba(255,100,100,0.15); color: #ff7070; }
+
+/* ── Stats strip ── */
+.stats-strip {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 60px 40px;
+  background: rgba(255,255,255,0.02);
+}
+.stats-inner {
+  max-width: 900px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 40px; text-align: center;
+}
+.stat-num {
+  font-size: clamp(40px, 6vw, 64px);
+  font-weight: 800; line-height: 1;
+  letter-spacing: -2px;
+}
+.stat-label {
+  font-size: 14px; color: rgba(255,255,255,0.4);
+  margin-top: 8px; line-height: 1.5;
+}
+.stat-divider {
+  width: 1px; background: rgba(255,255,255,0.07);
+}
+
+/* ── CTA footer ── */
+.footer-cta {
+  padding: 100px 40px;
+  text-align: center;
+}
+.footer-cta-title {
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 800; line-height: 1.1;
+  letter-spacing: -2px; color: var(--white);
+  max-width: 700px; margin: 0 auto 20px;
+}
+.footer-cta-title em {
+  font-style: normal;
+  background: linear-gradient(90deg, var(--lime), var(--teal));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.footer-cta-sub {
+  font-size: 17px; color: rgba(255,255,255,0.45);
+  margin-bottom: 40px;
+}
+
+/* ── Footer ── */
+footer {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 32px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-left {
+  font-size: 13px; color: rgba(255,255,255,0.3);
+}
+.footer-right {
+  font-size: 12px; color: rgba(255,255,255,0.2);
+}
+.footer-dev-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,209,102,0.08);
+  border: 1px solid rgba(255,209,102,0.15);
+  border-radius: 20px; padding: 4px 12px;
+  font-size: 11px; color: var(--amber);
+  font-weight: 600;
+}
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Ticker ── */
+.ticker-wrap {
+  overflow: hidden;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 14px 0;
+  background: rgba(175,230,7,0.03);
+}
+.ticker {
+  display: flex; gap: 0;
+  animation: ticker 25s linear infinite;
+  width: max-content;
+}
+.ticker-item {
+  display: flex; align-items: center; gap: 24px;
+  padding: 0 32px;
+  font-size: 13px; font-weight: 500;
+  color: rgba(255,255,255,0.35);
+  white-space: nowrap;
+}
+.ticker-sep {
+  color: var(--lime); font-size: 16px;
+}
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  nav { padding: 14px 20px; }
+  .nav-badge { display: none; }
+  .hero { padding: 100px 20px 60px; }
+  .section { padding: 70px 20px; }
+  .report-card { grid-template-columns: 1fr; padding: 36px 28px; gap: 36px; }
+  .stats-inner { grid-template-columns: 1fr; gap: 32px; }
+  .stat-divider { display: none; }
+  .frame-content { grid-template-columns: 1fr; }
+  .mock-sidebar { display: none; }
+  footer { flex-direction: column; text-align: center; }
+}
+
+/* ── Success state ── */
+.success-msg {
+  display: none;
+  align-items: center; gap: 10px;
+  background: rgba(0,168,120,0.15);
+  border: 1px solid rgba(0,168,120,0.3);
+  border-radius: 10px; padding: 14px 20px;
+  font-size: 14px; color: #5DCAA5;
+  font-weight: 500;
+}
+.success-msg.show { display: flex; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <svg viewBox="0 0 230 52" fill="none" xmlns="http://www.w3.org/2000/svg" height="44" style="display:block" aria-label="MiAB — Marketing in A Box">
+  <!-- M tile: lime bg, dark letter, no border -->
+  <rect x="0" y="0" width="23" height="23" rx="4" fill="#AFE607"/>
+  <text x="11.5" y="18" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-weight="900" font-size="16" fill="#0A0F0D" text-anchor="middle">M</text>
+  <!-- i tile: dark bg, white quirky-box border, white letter -->
+  <rect x="25" y="0" width="23" height="23" rx="4" fill="#1A1A1A"/>
+  <rect x="28" y="3" width="17" height="17" rx="3.5" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="36.5" y="17.5" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-weight="900" font-size="14" fill="#FFFFFF" text-anchor="middle">i</text>
+  <!-- A tile: dark bg, lime quirky-box border, lime letter -->
+  <rect x="0" y="26" width="23" height="23" rx="4" fill="#1A1A1A"/>
+  <rect x="3" y="29" width="17" height="17" rx="3.5" fill="none" stroke="#AFE607" stroke-width="2"/>
+  <text x="11.5" y="43.5" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-weight="900" font-size="14" fill="#AFE607" text-anchor="middle">A</text>
+  <!-- B tile: lime bg, dark letter, no border -->
+  <rect x="25" y="26" width="23" height="23" rx="4" fill="#AFE607"/>
+  <text x="36.5" y="43.5" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-weight="900" font-size="16" fill="#0A0F0D" text-anchor="middle">B</text>
+  <!-- Wordmark: all white, two lines -->
+  <text x="56" y="20" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-weight="800" font-size="18" fill="#FFFFFF" letter-spacing="-0.4">Marketing</text>
+  <text x="56" y="44" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-weight="800" font-size="18" fill="#FFFFFF" letter-spacing="-0.4">in A Box</text>
+</svg>
+  </div>
+  <div class="nav-badge">Coming Soon</div>
+  <a href="#waitlist" class="nav-cta">Join Waitlist</a>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-wrap" style="margin-top:64px">
+  <div class="ticker" id="ticker">
+    <div class="ticker-item">Brand Foundation <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">Communications Bible <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">Content Calendar <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">AI Content Generation <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">Approval Workflows <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">MIS Analytics <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">LinkedIn Engine <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">Competitor Intelligence <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">Campaign Management <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">One Platform. Everything. <span class="ticker-sep">✦</span></div>
+    <!-- duplicate for seamless loop -->
+    <div class="ticker-item">Brand Foundation <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">Communications Bible <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">Content Calendar <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">AI Content Generation <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">Approval Workflows <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">MIS Analytics <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">LinkedIn Engine <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">Competitor Intelligence <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">Campaign Management <span class="ticker-sep">✦</span></div>
+    <div class="ticker-item">One Platform. Everything. <span class="ticker-sep">✦</span></div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-blob-2"></div>
+  <div class="hero-blob-3"></div>
+
+  <div class="hero-eyebrow">
+    <span class="eyebrow-dot"></span>
+    Under Development · Be the First to Know
+  </div>
+
+  <h1 class="hero-title">
+    Your entire<br>
+    <span class="accent">marketing stack.</span><br>
+    <span class="accent-teal">One workspace.</span>
+  </h1>
+
+  <p class="hero-sub">
+    Stop switching between 10 tools to get one campaign live.
+    MiAB brings brand, content, campaigns, and performance
+    into a single AI-powered workspace — built for teams that
+    want to market smarter, not harder.
+  </p>
+
+  <div class="waitlist-block" id="waitlist">
+    <form class="waitlist-form" onsubmit="handleHeroSubmit(event)">
+      <input class="waitlist-input" type="email" id="heroEmail" placeholder="Enter your work email" required>
+      <button type="submit" class="waitlist-btn">
+        Get Early Access
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </form>
+    <div class="success-msg" id="heroSuccess">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="#5DCAA5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      You're on the list! Your free Brand Health Report will be sent when we launch beta.
+    </div>
+    <div class="report-badge">
+      <svg viewBox="0 0 14 14" fill="none">
+        <path d="M7 1.5L8.8 5.2l4.1.6-3 2.9.7 4.1L7 10.7l-3.6 1.9.7-4.1-3-2.9 4.1-.6L7 1.5z" fill="currentColor"/>
+      </svg>
+      Join the waitlist · Get your <strong>Free Brand Health Report</strong> at beta launch
+    </div>
+  </div>
+
+  <div class="social-proof">
+    <div class="proof-avatars">
+      <div class="proof-avatar" style="background:#AFE607">A</div>
+      <div class="proof-avatar" style="background:#00A878;margin-left:-8px">R</div>
+      <div class="proof-avatar" style="background:#FFD166;margin-left:-8px">S</div>
+      <div class="proof-avatar" style="background:#4A9EFF;margin-left:-8px">+</div>
+    </div>
+    <div class="proof-text"><strong>240+ marketers</strong> already on the waitlist</div>
+    <div class="proof-divider"></div>
+    <div class="proof-text">Launching <strong>Q3 2025</strong></div>
+  </div>
+</section>
+
+<!-- DASHBOARD PREVIEW -->
+<div class="preview-section">
+  <div class="preview-frame">
+    <div class="frame-bar">
+      <div class="frame-dot" style="background:#FF5F57"></div>
+      <div class="frame-dot" style="background:#FFBD2E"></div>
+      <div class="frame-dot" style="background:#28CA42"></div>
+      <div class="frame-url">app.miab.io/dashboard</div>
+    </div>
+    <div class="frame-content">
+      <!-- Sidebar -->
+      <div class="mock-sidebar">
+        <div class="mock-logo-row">
+          <div class="mock-logo-box" style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#0A0F0D;border-radius:4px;overflow:hidden;width:20px;height:20px;flex-shrink:0">
+            <div style="background:#AFE607;display:flex;align-items:center;justify-content:center;font-size:6px;font-weight:900;color:#0A0F0D;font-family:sans-serif">M</div>
+            <div style="background:#1A1A1A;display:flex;align-items:center;justify-content:center;font-size:6px;font-weight:900;color:#fff;font-family:sans-serif;border:0.5px solid #fff;box-sizing:border-box">i</div>
+            <div style="background:#1A1A1A;display:flex;align-items:center;justify-content:center;font-size:6px;font-weight:900;color:#AFE607;font-family:sans-serif;border:0.5px solid #AFE607;box-sizing:border-box">A</div>
+            <div style="background:#AFE607;display:flex;align-items:center;justify-content:center;font-size:6px;font-weight:900;color:#0A0F0D;font-family:sans-serif">B</div>
+          </div>
+          <div class="mock-logo-text"></div>
+        </div>
+        <div class="mock-nav-item active">
+          <div class="mock-nav-dot"></div>
+          <div class="mock-nav-line"></div>
+        </div>
+        <div class="mock-nav-item">
+          <div class="mock-nav-dot"></div>
+          <div class="mock-nav-line"></div>
+          <div class="mock-badge">3</div>
+        </div>
+        <div class="mock-nav-item">
+          <div class="mock-nav-dot"></div>
+          <div class="mock-nav-line"></div>
+        </div>
+        <div class="mock-nav-item">
+          <div class="mock-nav-dot"></div>
+          <div class="mock-nav-line"></div>
+        </div>
+        <div class="mock-nav-item">
+          <div class="mock-nav-dot"></div>
+          <div class="mock-nav-line"></div>
+        </div>
+        <div style="height:1px;background:rgba(255,255,255,0.06);margin:10px 0"></div>
+        <div class="mock-nav-item">
+          <div class="mock-nav-dot"></div>
+          <div class="mock-nav-line"></div>
+        </div>
+        <div class="mock-nav-item">
+          <div class="mock-nav-dot"></div>
+          <div class="mock-nav-line"></div>
+        </div>
+      </div>
+      <!-- Main -->
+      <div class="mock-main">
+        <div class="mock-topbar">
+          <div class="mock-tb-title"></div>
+          <div class="spacer"></div>
+          <div class="mock-btn-sm"></div>
+        </div>
+        <div class="mock-kpi-row">
+          <div class="mock-kpi green">
+            <div class="mock-kpi-label"></div>
+            <div class="mock-kpi-val"></div>
+          </div>
+          <div class="mock-kpi teal">
+            <div class="mock-kpi-label"></div>
+            <div class="mock-kpi-val"></div>
+          </div>
+          <div class="mock-kpi amber">
+            <div class="mock-kpi-label"></div>
+            <div class="mock-kpi-val"></div>
+          </div>
+          <div class="mock-kpi">
+            <div class="mock-kpi-label"></div>
+            <div class="mock-kpi-val"></div>
+          </div>
+        </div>
+        <div class="mock-content-row">
+          <div class="mock-card">
+            <div class="mock-card-title"></div>
+            <div class="mock-post-row">
+              <div class="mock-platform-dot" style="background:#E1306C"></div>
+              <div class="mock-post-line"></div>
+              <div class="mock-status-pill" style="background:rgba(175,230,7,0.2);border-radius:8px"></div>
+            </div>
+            <div class="mock-post-row">
+              <div class="mock-platform-dot" style="background:#0A66C2"></div>
+              <div class="mock-post-line"></div>
+              <div class="mock-status-pill" style="background:rgba(255,209,102,0.2);border-radius:8px"></div>
+            </div>
+            <div class="mock-post-row">
+              <div class="mock-platform-dot" style="background:#1877F2"></div>
+              <div class="mock-post-line"></div>
+              <div class="mock-status-pill" style="background:rgba(0,168,120,0.2);border-radius:8px"></div>
+            </div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-title"></div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="height:7px;width:100%;background:rgba(175,230,7,0.2);border-radius:3px"></div>
+              <div style="height:7px;width:70%;background:rgba(0,168,120,0.2);border-radius:3px"></div>
+              <div style="height:7px;width:85%;background:rgba(255,209,102,0.2);border-radius:3px"></div>
+              <div style="height:7px;width:55%;background:rgba(255,255,255,0.1);border-radius:3px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">The Problem</div>
+    <h2 class="section-title">Marketing is broken<br>for most businesses.</h2>
+    <p class="section-sub">The average SME stitches together 6–10 tools and still can't answer "is our marketing working?" at the end of the month.</p>
+
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-num">01</div>
+        <div class="problem-card-title">Brand goes off-script every week</div>
+        <div class="problem-card-body">Different tones, wrong colours, inconsistent messaging — because there's no single source of truth that everyone follows.</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">02</div>
+        <div class="problem-card-title">Content approval is a WhatsApp thread</div>
+        <div class="problem-card-body">Posts go live without the right eyes on them. Mistakes reach thousands before anyone notices. No audit trail.</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">03</div>
+        <div class="problem-card-title">6 tools, 6 logins, 6 monthly fees</div>
+        <div class="problem-card-body">Canva. Buffer. Hootsuite. Spreadsheet for reporting. Email for briefs. None of them talk to each other.</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">04</div>
+        <div class="problem-card-title">ROI is always "unclear"</div>
+        <div class="problem-card-body">Spend is visible. Returns aren't. Because the data lives in five different platforms that no one has time to reconcile.</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">05</div>
+        <div class="problem-card-title">Your founders' LinkedIn is a goldmine — untouched</div>
+        <div class="problem-card-body">The CEO's personal page reaches 40x more people than the company page. Nobody is managing it. Leads are walking past every day.</div>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">06</div>
+        <div class="problem-card-title">AI tools give generic output</div>
+        <div class="problem-card-body">ChatGPT doesn't know your brand. The output sounds like everyone else. You edit it for 20 minutes and wonder why you bothered.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION / MODULES -->
+<section class="section solution-section">
+  <div class="section-inner">
+    <div class="section-label">The Solution</div>
+    <h2 class="section-title">One workspace.<br>Everything your<br>marketing needs.</h2>
+    <p class="section-sub">Five modules. One login. AI that actually knows your brand — because you taught it everything in the first 5 minutes.</p>
+
+    <div class="modules-grid">
+      <div class="module-card">
+        <div class="module-icon" style="background:rgba(175,230,7,0.12)">🏗️</div>
+        <div class="module-label">Module 1</div>
+        <div class="module-title">Brand Foundation</div>
+        <div class="module-desc">Enter your URL. AI reads your website and builds your brand profile — colours, voice, mission, competitors — in 15 seconds. You approve. It never forgets.</div>
+      </div>
+      <div class="module-card">
+        <div class="module-icon" style="background:rgba(0,168,120,0.12)">📖</div>
+        <div class="module-label">Module 2</div>
+        <div class="module-title">Comms Bible</div>
+        <div class="module-desc">Your brand voice, approved phrases, banned words, and tone rules — all in one searchable place. Every AI-generated piece is checked against it automatically.</div>
+      </div>
+      <div class="module-card">
+        <div class="module-icon" style="background:rgba(255,209,102,0.12)">📅</div>
+        <div class="module-label">Module 3</div>
+        <div class="module-title">Content Engine</div>
+        <div class="module-desc">Plan, create, approve, and publish across Instagram, LinkedIn, Facebook, and more — from one calendar. AI generates the first draft. You approve before anything goes live.</div>
+      </div>
+      <div class="module-card">
+        <div class="module-icon" style="background:rgba(175,230,7,0.12)">📊</div>
+        <div class="module-label">Module 4</div>
+        <div class="module-title">MIS Analytics</div>
+        <div class="module-desc">Social, ad, and web data in one dashboard. No spreadsheets. Just clear KPIs and AI-generated insights that tell you exactly what to do next.</div>
+      </div>
+      <div class="module-card" style="border-color:rgba(0,168,120,0.2)">
+        <div class="module-icon" style="background:rgba(0,168,120,0.12)">🔗</div>
+        <div class="module-label">Module 5</div>
+        <div class="module-title">LinkedIn Engine</div>
+        <div class="module-desc">Your CEO and CTO have audiences that can't be bought with ads. We turn their LinkedIn profiles into a 24/7 brand-building and lead-generation machine.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div>
+      <div class="stat-num" style="color:var(--lime)">10×</div>
+      <div class="stat-label">faster content creation<br>with AI that knows your brand</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div>
+      <div class="stat-num" style="color:var(--teal)">6 → 1</div>
+      <div class="stat-label">tools replaced<br>by a single workspace</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div>
+      <div class="stat-num" style="color:var(--amber)">40×</div>
+      <div class="stat-label">more reach from<br>executive LinkedIn posts</div>
+    </div>
+  </div>
+</div>
+
+<!-- FREE BRAND REPORT -->
+<section class="report-section" id="report">
+  <div class="report-card">
+    <div>
+      <div class="report-eyebrow">
+        <span>FREE</span> Delivered at beta launch.
+      </div>
+      <h2 class="report-title">
+        Get your <em>Free Brand<br>Health Report</em> —<br>at beta launch.
+      </h2>
+      <p class="report-body">
+        Join the waitlist. When MiAB goes into beta, we'll run a full AI analysis of your brand — website, social presence, messaging consistency, competitor positioning — and send you a personalised report.
+      </p>
+      <div class="report-items">
+        <div class="report-item">
+          <div class="report-item-check">✓</div>
+          Brand voice and consistency score
+        </div>
+        <div class="report-item">
+          <div class="report-item-check">✓</div>
+          Social profile health check (all platforms)
+        </div>
+        <div class="report-item">
+          <div class="report-item-check">✓</div>
+          Top 3 competitor positioning gaps
+        </div>
+        <div class="report-item">
+          <div class="report-item-check">✓</div>
+          LinkedIn executive presence score
+        </div>
+        <div class="report-item">
+          <div class="report-item-check">✓</div>
+          5 quick-win recommendations to act on today
+        </div>
+      </div>
+    </div>
+
+    <div class="report-preview">
+      <div class="report-doc">
+        <div class="report-doc-header">
+          <div class="report-doc-logo" style="background:transparent;padding:0;border-radius:0;width:auto;height:auto"><svg viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+  <rect x="0" y="0" width="22" height="22" rx="4" fill="#AFE607"/>
+  <text x="11" y="17" font-family="'Plus Jakarta Sans',sans-serif" font-weight="900" font-size="15" fill="#0A0F0D" text-anchor="middle">M</text>
+  <rect x="24" y="0" width="22" height="22" rx="4" fill="#1A1A1A"/>
+  <rect x="27" y="3" width="16" height="16" rx="3" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="35" y="16.5" font-family="'Plus Jakarta Sans',sans-serif" font-weight="900" font-size="13" fill="#FFFFFF" text-anchor="middle">i</text>
+  <rect x="0" y="24" width="22" height="22" rx="4" fill="#1A1A1A"/>
+  <rect x="3" y="27" width="16" height="16" rx="3" fill="none" stroke="#AFE607" stroke-width="2"/>
+  <text x="11" y="40.5" font-family="'Plus Jakarta Sans',sans-serif" font-weight="900" font-size="13" fill="#AFE607" text-anchor="middle">A</text>
+  <rect x="24" y="24" width="22" height="22" rx="4" fill="#AFE607"/>
+  <text x="35" y="40.5" font-family="'Plus Jakarta Sans',sans-serif" font-weight="900" font-size="15" fill="#0A0F0D" text-anchor="middle">B</text>
+</svg></div>
+          <div>
+            <div class="report-doc-title" style="font-size:13px;font-weight:700;color:var(--white)">Brand Health Report</div>
+            <div class="report-doc-sub" style="font-size:11px;color:rgba(255,255,255,0.4)">Marketing in A Box · acmecorp.com</div>
+          </div>
+        </div>
+
+        <div class="report-metric">
+          <div class="report-metric-label">Overall Brand Score</div>
+          <div class="report-score" style="color:var(--lime)">74 <span>/ 100</span></div>
+          <div class="report-metric-bar" style="margin-top:6px">
+            <div class="report-metric-fill" style="width:74%;background:var(--lime)"></div>
+          </div>
+        </div>
+
+        <div class="report-metric">
+          <div class="report-metric-label">Voice Consistency</div>
+          <div class="report-metric-bar">
+            <div class="report-metric-fill" style="width:62%;background:var(--amber)"></div>
+          </div>
+        </div>
+
+        <div class="report-metric">
+          <div class="report-metric-label">LinkedIn Presence</div>
+          <div class="report-metric-bar">
+            <div class="report-metric-fill" style="width:38%;background:#ff7070"></div>
+          </div>
+        </div>
+
+        <div class="report-metric">
+          <div class="report-metric-label">Competitor Gaps Found</div>
+          <div class="report-metric-bar">
+            <div class="report-metric-fill" style="width:85%;background:var(--teal)"></div>
+          </div>
+        </div>
+
+        <div class="report-tag-row">
+          <span class="report-tag tag-lime">Strong website</span>
+          <span class="report-tag tag-amber">Tone inconsistency</span>
+          <span class="report-tag tag-red">LinkedIn gap</span>
+          <span class="report-tag tag-teal">3 quick wins</span>
+        </div>
+      </div>
+
+      <!-- Floating label -->
+      <div style="margin-top:14px;text-align:center">
+        <span style="font-size:11px;color:rgba(255,255,255,0.3)">Sample report · Yours will be personalised to your brand</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Waitlist form below card -->
+  <div style="max-width:480px;margin:40px auto 0">
+    <form id="reportForm" onsubmit="handleReportSubmit(event)" style="display:flex;flex-direction:column;gap:10px">
+      <input class="report-input" type="text" id="reportName" placeholder="Your name" required>
+      <input class="report-input" type="email" id="reportEmail" placeholder="Work email" required>
+      <input class="report-input" type="url" id="reportUrl" placeholder="Your website URL (e.g. yourcompany.com)">
+      <button type="submit" class="report-submit">
+        Reserve My Free Brand Report
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </form>
+    <div class="success-msg" id="reportSuccess" style="margin-top:10px">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l4 4 6-6" stroke="#5DCAA5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      You're reserved! Your free Brand Health Report will be sent when MiAB launches beta.
+    </div>
+    <p class="report-note" style="margin-top:12px">No spam. No sales calls. We'll send your Brand Health Report when we go beta.</p>
+  </div>
+</section>
+
+<!-- FOOTER CTA -->
+<section class="footer-cta">
+  <h2 class="footer-cta-title">
+    Marketing that<br><em>actually works.</em><br>Coming soon.
+  </h2>
+  <p class="footer-cta-sub">Be first in line. Your free Brand Health Report ships at beta launch.</p>
+  <a href="#report" class="nav-cta" style="font-size:15px;padding:14px 32px;text-decoration:none">
+    Reserve My Free Brand Report →
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <svg viewBox="0 0 230 52" fill="none" xmlns="http://www.w3.org/2000/svg" height="34" style="display:block" aria-label="MiAB — Marketing in A Box">
+  <rect x="0" y="0" width="23" height="23" rx="4" fill="#AFE607"/>
+  <text x="11.5" y="18" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-weight="900" font-size="16" fill="#0A0F0D" text-anchor="middle">M</text>
+  <rect x="25" y="0" width="23" height="23" rx="4" fill="#1A1A1A"/>
+  <rect x="28" y="3" width="17" height="17" rx="3.5" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="36.5" y="17.5" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-weight="900" font-size="14" fill="#FFFFFF" text-anchor="middle">i</text>
+  <rect x="0" y="26" width="23" height="23" rx="4" fill="#1A1A1A"/>
+  <rect x="3" y="29" width="17" height="17" rx="3.5" fill="none" stroke="#AFE607" stroke-width="2"/>
+  <text x="11.5" y="43.5" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-weight="900" font-size="14" fill="#AFE607" text-anchor="middle">A</text>
+  <rect x="25" y="26" width="23" height="23" rx="4" fill="#AFE607"/>
+  <text x="36.5" y="43.5" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-weight="900" font-size="16" fill="#0A0F0D" text-anchor="middle">B</text>
+  <text x="56" y="20" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-weight="800" font-size="18" fill="#FFFFFF" letter-spacing="-0.4">Marketing</text>
+  <text x="56" y="44" font-family="'Plus Jakarta Sans',system-ui,sans-serif" font-weight="800" font-size="18" fill="#FFFFFF" letter-spacing="-0.4">in A Box</text>
+</svg>
+    <div style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:8px">© 2025 MiAB. All rights reserved.</div>
+  </div>
+  </div>
+  <div>
+    <span class="footer-dev-badge">
+      <span style="width:6px;height:6px;border-radius:50%;background:var(--amber);animation:pulse 2s infinite;display:inline-block"></span>
+      Under Active Development
+    </span>
+  </div>
+  <div class="footer-right">
+    Built with purpose.<br>Launching Q3 2025.
+  </div>
+</footer>
+
+<script>
+function handleHeroSubmit(e) {
+  e.preventDefault();
+  const email = document.getElementById('heroEmail').value;
+  if (!email) return;
+  document.querySelector('.waitlist-form').style.display = 'none';
+  document.getElementById('heroSuccess').classList.add('show');
+  // In production: POST to your waitlist endpoint
+  console.log('Waitlist signup:', email);
+}
+
+function handleReportSubmit(e) {
+  e.preventDefault();
+  const name  = document.getElementById('reportName').value;
+  const email = document.getElementById('reportEmail').value;
+  const url   = document.getElementById('reportUrl').value;
+  if (!name || !email) return;
+  document.getElementById('reportForm').style.display = 'none';
+  document.getElementById('reportSuccess').classList.add('show');
+  // In production: POST to your backend to queue the brand report generation
+  console.log('Brand report request:', { name, email, url });
+}
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.problem-card, .module-card, .report-card').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(24px)';
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
